@@ -1,18 +1,20 @@
-import './App.css';
-import FunctionHelloWorld from './components/function.component';
-import CreateElementHelloWorld from './components/create.component';
-import ClassHelloWorld from './components/class.component';
-import PureHelloWorld from './components/pure.component';
+import { ErrorBoundary } from './components/error-boundary.component';
+import { Footer } from './components/footer/footer.component';
+import { HeaderWrapper } from './components/header/header-wrapper.component';
+import { MainWrapper } from './components/main/main-wrapper.component';
+import { ThemeProvider } from 'styled-components';
+import { theme } from './variables';
+import './app.scss';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <h1>Components</h1>
-      <FunctionHelloWorld />
-      <CreateElementHelloWorld />
-      <ClassHelloWorld />
-      <PureHelloWorld />
-    </div>
+    <ThemeProvider theme={theme}>
+      <ErrorBoundary>
+        <HeaderWrapper></HeaderWrapper>
+        <MainWrapper></MainWrapper>
+        <Footer></Footer>
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 }
 
