@@ -34,7 +34,6 @@ const Select = styled.select`
   appearance: none;
 `
 
-
 export const SortBySelect = () => {
   return (
     <FilterBy>

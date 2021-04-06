@@ -36,6 +36,9 @@ const ButtonAdd = styled.button`
   text-transform: uppercase;
   padding: 5px 15px;
   border-radius: 3px;
+  &:hover {
+    cursor: pointer;
+  }
 
   &::before {
     content: '+ ';
@@ -48,20 +51,31 @@ const HeaderMain = styled.div`
   margin: auto;
 `
 
-export const HeaderWrapper = () => {
-  return (
-    <Header>
-      <HeaderContainer>
-        <HeaderTop>
-          <SpanLogo><strong>netflix</strong>roulette</SpanLogo>
-          <ButtonAdd>
-            add movie
-          </ButtonAdd>
-        </HeaderTop>
-        <HeaderMain>
-          <SearchBar></SearchBar>
-        </HeaderMain>
-      </HeaderContainer>
-    </Header>
-  )
+export class HeaderWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.setModalState = this.setModalState.bind(this)
+  }
+
+  setModalState() {
+    this.props.handleClick(true);
+  }
+
+  render() {
+    return (
+      <Header>
+        <HeaderContainer>
+          <HeaderTop>
+            <SpanLogo><strong>netflix</strong>roulette</SpanLogo>
+            <ButtonAdd onClick={this.setModalState}>
+              add movie
+            </ButtonAdd>
+          </HeaderTop>
+          <HeaderMain>
+            <SearchBar></SearchBar>
+          </HeaderMain>
+        </HeaderContainer>
+      </Header>
+    )
+  }
 }

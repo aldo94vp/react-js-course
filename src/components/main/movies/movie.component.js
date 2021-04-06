@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Modal } from '../../modals/modal.component';
 
 const MovieContainer = styled.div`
   width: 30%;
@@ -105,38 +106,74 @@ const Genre = styled.span`
   }
 `
 
-export const Movie = (props) => {
-  const { title, year, imgSrc, genres } = props.movie;
+export class Movie extends React.Component {
+  static propTypes = {
+    title: PropTypes.string,
+    imgSrc: PropTypes.string,
+    year: PropTypes.number,
+    genres: PropTypes.arrayOf(PropTypes.string)
+  }
 
-  return (
-    <MovieContainer>
-      <MovieImage imgSrc={imgSrc}>
-        <MovieOptionsButton>
-          <span></span>
-          <span></span>
-          <span></span>
-        </MovieOptionsButton> 
-        <MovieOptions>
-          <button onClick={() => console.log('Edit')}>Edit</button>
-          <button onClick={() => console.log('Delete')}>Delete</button>
-        </MovieOptions>
-      </MovieImage>
-      <MovieDetails>
-        <MovieTitle>{ title }</MovieTitle>
-        <MovieYear>{ year }</MovieYear>
-        <MovieGenres>
-          {genres.map((genre, idx) => (
-            <Genre key={`movie-genre-${idx}`}>{ genre }</Genre>
-          ))}
-        </MovieGenres>
-      </MovieDetails>
-    </MovieContainer>
-  )
-}
+  constructor(props) {
+    super(props);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.state = {
+      isModalOpen: false
+    }
+  }
 
-Movie.propTypes = {
-  title: PropTypes.string,
-  imgSrc: PropTypes.string,
-  year: PropTypes.number,
-  genres: PropTypes.arrayOf(PropTypes.string)
+  openModal(e) {
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0);
+    this.setState({ 
+      isModalOpen: true,
+      type: e.target.dataset.action
+    });
+  }
+
+  closeModal() {
+    document.body.style.overflow = 'auto';
+    this.setState({ isModalOpen: false });
+  }
+  
+  render() {
+    const { title, year, imgSrc, genres } = this.props.movie;
+    return (
+      <>
+        <MovieContainer>
+          <MovieImage imgSrc={imgSrc}>
+            <MovieOptionsButton>
+              <span></span>
+              <span></span>
+              <span></span>
+            </MovieOptionsButton> 
+            <MovieOptions>
+              <button data-action="edit" onClick={this.openModal}>Edit</button>
+              <button data-action="delete" onClick={this.openModal}>Delete</button>
+            </MovieOptions>
+          </MovieImage>
+          <MovieDetails>
+            <MovieTitle>{ title }</MovieTitle>
+            <MovieYear>{ year }</MovieYear>
+            <MovieGenres>
+              {
+                genres.map((genre, idx) => (
+                  <Genre key={`movie-genre-${idx}`}>{ genre }</Genre>
+                ))
+              }
+            </MovieGenres>
+          </MovieDetails>
+        </MovieContainer>
+        {
+          this.state.isModalOpen && 
+            <Modal 
+              handleClick={this.closeModal} 
+              type={this.state.type} 
+              movie={this.props.movie}>
+            </Modal>
+        }
+      </>
+    )
+  }
 }
