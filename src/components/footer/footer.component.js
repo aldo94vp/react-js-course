@@ -12,10 +12,12 @@ const SpanLogo = styled.span`
   color: ${props => props.theme.red};
 `
 
-export const Footer = () => {
+const Footer = () => {
   return (
     <FooterContainer>
       <SpanLogo><strong>netflix</strong>roulette</SpanLogo>
     </FooterContainer>
   )
 }
+
+export default Footer;

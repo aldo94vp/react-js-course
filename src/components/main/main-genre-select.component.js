@@ -21,7 +21,7 @@ const Genre = styled.button`
   }
 `
 
-export const GenreSelect = (props) => {
+const GenreSelect = (props) => {
   const genres = props.genres;
   return (
     <GenresContainer>
@@ -32,3 +32,5 @@ export const GenreSelect = (props) => {
     </GenresContainer>
   )
 }
+
+export default GenreSelect;

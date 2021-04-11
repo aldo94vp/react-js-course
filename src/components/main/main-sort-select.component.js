@@ -34,7 +34,7 @@ const Select = styled.select`
   appearance: none;
 `
 
-export const SortBySelect = () => {
+const SortBySelect = () => {
   return (
     <FilterBy>
       <Label htmlFor="filter-by">sort by</Label>
@@ -46,3 +46,5 @@ export const SortBySelect = () => {
     </FilterBy>
   )
 }
+
+export default SortBySelect;

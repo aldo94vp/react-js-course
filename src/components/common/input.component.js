@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 
 const InputContainer = styled.div`
@@ -43,7 +43,7 @@ const InputName = styled.input`
     &::-webkit-calendar-picker-indicator {
       opacity: 0;
     }
-    background: url(./calendar-icon.png) 99% 50% no-repeat;
+    background: url(./assets/calendar-icon.png) 99% 50% no-repeat;
     background-color: rgba(255, 255, 255, 0.2);
   }
 `
@@ -77,61 +77,45 @@ const Select = styled.select`
 `
 
 
-export class Input extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.state = {
-      value: ''
-    }
-  }
+const Input = props => {
 
-  componentDidMount() {
-    const { value } = this.props;
-    value && this.setState({value: value});
-  }
-
-  handleChange(event) {
-    this.setState({value: event.target.value});
-  }
-
-  render() {
-    const { type, label, placeholder, name, className, width } = this.props;
-    
-    return(
-      <>
-        <InputContainer className={
-          [placeholder && 'has-placeholder',
-          type === 'select' && 'is-select']
-        } style={
-          {width}
+  const { value, type, label, placeholder, name, className, width } = props;
+  
+  const [ newValue, setNewValue ] = useState(value ? value : '');
+  
+  return(
+    <>
+      <InputContainer className={
+        [placeholder && 'has-placeholder',
+        type === 'select' && 'is-select']
+      } style={
+        {width}
+      }
+      >
+        {
+          type === 'select' ?
+            <Select 
+              placeholder={placeholder ? placeholder : ' '} 
+              className={placeholder && 'has-placeholder' } 
+              type={type} 
+              name={name}>
+              <option>Action</option>
+              <option>Comedy</option>
+              <option>Suspense</option>
+            </Select> 
+            :
+            <InputName 
+              placeholder={placeholder ? placeholder : ' '} 
+              className={placeholder && 'has-placeholder' } 
+              type={type} 
+              name={name}
+              value={newValue}
+              onChange={setNewValue} />
         }
-        >
-          {
-            type === 'select' ?
-              <Select 
-                placeholder={placeholder ? placeholder : ' '} 
-                className={placeholder && 'has-placeholder' } 
-                type={type} 
-                name={name}>
-                <option>Action</option>
-                <option>Comedy</option>
-                <option>Suspense</option>
-              </Select> 
-              :
-              <InputName 
-                placeholder={placeholder ? placeholder : ' '} 
-                className={placeholder && 'has-placeholder' } 
-                type={type} 
-                name={name}
-                value={this.state.value}
-                onChange={this.handleChange} />
-          }
-          <Label htmlFor={name} className={className}>{label}</Label>
-        </InputContainer>
-      </>
-    )
-  }
+        <Label htmlFor={name} className={className}>{label}</Label>
+      </InputContainer>
+    </>
+  )
 }
 
 export default Input;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Movie } from './movie.component';
+import Movie from './movie.component';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -14,14 +14,14 @@ const MoviesGrid = styled.div`
   justify-content: space-between;
 `
 
-export const MoviesWrapper = (props) => {
-  const movies = props.movies;
+const MoviesWrapper = (props) => {
+  const { movies, handleClick } = props;
   return (
     <>
       <MoviesCount>{ movies.length } movies found</MoviesCount>
       <MoviesGrid>
         {movies.map((movie, idx) => (
-          <Movie key={`movie-${idx}`} movie={movie}></Movie>
+          <Movie key={`movie-${idx}`} movie={movie} handleClick={handleClick}></Movie>
         ))}
       </MoviesGrid>
     </>
@@ -31,3 +31,5 @@ export const MoviesWrapper = (props) => {
 MoviesWrapper.propTypes = {
   movies: PropTypes.arrayOf(PropTypes.object)
 }
+
+export default MoviesWrapper;

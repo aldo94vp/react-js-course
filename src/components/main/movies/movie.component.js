@@ -1,7 +1,7 @@
-import React from 'react';
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Modal } from '../../modals/modal.component';
+import { MoviesContext } from '../../../contexts';
 
 const MovieContainer = styled.div`
   width: 30%;
@@ -19,6 +19,7 @@ const MovieImage = styled.div`
   position: relative;
   display: flex;
   justify-content: flex-end;
+  cursor: pointer;
   &:hover {
     > span {
       display: block;
@@ -106,74 +107,55 @@ const Genre = styled.span`
   }
 `
 
-export class Movie extends React.Component {
-  static propTypes = {
-    title: PropTypes.string,
-    imgSrc: PropTypes.string,
-    year: PropTypes.number,
-    genres: PropTypes.arrayOf(PropTypes.string)
-  }
+const Movie = props => {
+  const moviesContext = useContext(MoviesContext);
 
-  constructor(props) {
-    super(props);
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.state = {
-      isModalOpen: false
-    }
-  }
-
-  openModal(e) {
-    document.body.style.overflow = 'hidden';
-    window.scrollTo(0, 0);
-    this.setState({ 
-      isModalOpen: true,
-      type: e.target.dataset.action
-    });
-  }
-
-  closeModal() {
-    document.body.style.overflow = 'auto';
-    this.setState({ isModalOpen: false });
-  }
+  const { 
+    setModalOptions,
+    setMovieSelected
+  } = moviesContext;
   
-  render() {
-    const { title, year, imgSrc, genres } = this.props.movie;
-    return (
-      <>
-        <MovieContainer>
-          <MovieImage imgSrc={imgSrc}>
-            <MovieOptionsButton>
-              <span></span>
-              <span></span>
-              <span></span>
-            </MovieOptionsButton> 
-            <MovieOptions>
-              <button data-action="edit" onClick={this.openModal}>Edit</button>
-              <button data-action="delete" onClick={this.openModal}>Delete</button>
-            </MovieOptions>
-          </MovieImage>
-          <MovieDetails>
-            <MovieTitle>{ title }</MovieTitle>
-            <MovieYear>{ year }</MovieYear>
-            <MovieGenres>
-              {
-                genres.map((genre, idx) => (
-                  <Genre key={`movie-genre-${idx}`}>{ genre }</Genre>
-                ))
-              }
-            </MovieGenres>
-          </MovieDetails>
-        </MovieContainer>
-        {
-          this.state.isModalOpen && 
-            <Modal 
-              handleClick={this.closeModal} 
-              type={this.state.type} 
-              movie={this.props.movie}>
-            </Modal>
-        }
-      </>
-    )
+  const { title, year, imgSrc, genres } = props.movie;
+
+  const setMovie = () => {
+    setMovieSelected(props.movie);
   }
+
+  return (
+    <>
+      <MovieContainer>
+        <MovieImage imgSrc={imgSrc} onClick={setMovie}>
+          <MovieOptionsButton>
+            <span></span>
+            <span></span>
+            <span></span>
+          </MovieOptionsButton> 
+          <MovieOptions>
+            <button onClick={() => setModalOptions({isModalOpen:true, type: 'edit'})}>Edit</button>
+            <button onClick={() => setModalOptions({isModalOpen:true, type: 'delete'})}>Delete</button>
+          </MovieOptions>
+        </MovieImage>
+        <MovieDetails>
+          <MovieTitle>{ title }</MovieTitle>
+          <MovieYear>{ year }</MovieYear>
+          <MovieGenres>
+            {
+              genres.map((genre, idx) => (
+                <Genre key={`movie-genre-${idx}`}>{ genre }</Genre>
+              ))
+            }
+          </MovieGenres>
+        </MovieDetails>
+      </MovieContainer>
+    </>
+  )
 }
+
+Movie.propTypes = {
+  title: PropTypes.string,
+  imgSrc: PropTypes.string,
+  year: PropTypes.number,
+  genres: PropTypes.arrayOf(PropTypes.string)
+}
+
+export default Movie;

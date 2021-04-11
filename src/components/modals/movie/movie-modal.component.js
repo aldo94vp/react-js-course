@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import Input from '../../common/input.component';
 import ButtonPrimary from '../../common/button-primary.component';
@@ -14,16 +14,18 @@ const ButtonContainer = styled.div`
   }
 `
 
-const parseDate = year => {
-  const now = new Date(new Date().setFullYear(year));
-  const day = ("0" + now.getDate()).slice(-2);
-  const month = ("0" + (now.getMonth() + 1)).slice(-2);
-
-  return now.getFullYear()+"-"+(month)+"-"+(day) ;
-}
 
 const MovieModal = props => {
   const { type, movie } = props;
+  
+  const parseDate = useCallback(() => {
+    const now = new Date(new Date().setFullYear(movie.year));
+    const day = ("0" + now.getDate()).slice(-2);
+    const month = ("0" + (now.getMonth() + 1)).slice(-2);
+  
+    return now.getFullYear()+"-"+(month)+"-"+(day) ;
+  }, [movie.year]);
+  
   return (
     <>
       {
@@ -32,7 +34,7 @@ const MovieModal = props => {
         :
           <>
             <h1>
-              {movie ? 'Edit' : 'Add'}  Movie
+              { type === 'add' ? 'Add' : 'Edit' }  Movie
             </h1>
             <form>
               <Input 

@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+
+import { MoviesContext } from '../../contexts';
+
 import MovieModal from './movie/movie-modal.component';
 
 const BlurContainer = styled.div`
@@ -52,25 +55,28 @@ const CloseButton = styled.span`
   }
 `
 
-export class Modal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.closeModal = this.closeModal.bind(this);
-  }
+const Modal = () => {
+  const moviesContext = useContext(MoviesContext);
 
-  closeModal() {
-    this.props.handleClick(true);
-  }
-
-  render() {
-    const { type, movie } = this.props;
-    return (
-      <BlurContainer>
-        <CloseButton onClick={this.closeModal}></CloseButton>
-        <Container>
-          <MovieModal type={type} movie={movie}></MovieModal>
-        </Container>
-      </BlurContainer>
-    )
-  }
+  const {
+    modalOptions,
+    setModalOptions,
+    movieSelected
+  } = moviesContext;
+  
+  return (
+    <>
+      {
+        modalOptions.isModalOpen &&
+        <BlurContainer>
+          <CloseButton onClick={() => setModalOptions({isModalOpen: false})}></CloseButton>
+          <Container>
+            <MovieModal type={modalOptions.type} movie={movieSelected}></MovieModal>
+          </Container>
+        </BlurContainer>
+      }
+    </>
+  )
 }
+
+export default Modal;
