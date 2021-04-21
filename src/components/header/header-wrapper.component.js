@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import { SearchBar } from './header-searchbar.component';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { MoviesContext } from '../../contexts';
+
+import SearchBar from './header-searchbar.component';
 import MovieCard from '../main/movies/movie-card.component';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { clearMovie, openModalAdd } from '../../actions';
 const bgHeader = 'https://images2.alphacoders.com/103/1039991.jpg';
 
 const Header = styled.header`
@@ -72,12 +72,10 @@ const HeaderMain = styled.div`
 `
 
 const HeaderWrapper = () => {
-  const moviesContext = useContext(MoviesContext)
+  const dispatch = useDispatch();
+
+  const movieSelected = useSelector(state => state.movie);
   
-  const { 
-    setModalOptions,
-    movieSelected
-  } = moviesContext;
   const [ isShowingMovie, setIsShowingMovie ] = useState(false);
 
   useEffect(() => {
@@ -92,10 +90,10 @@ const HeaderWrapper = () => {
           {
             isShowingMovie ?
               <ClearMovieSelected 
-                onClick={() => setModalOptions({isModalOpen: false})}>
+                onClick={() => dispatch(clearMovie())}>
               </ClearMovieSelected>
               :
-              <ButtonAdd onClick={() => setModalOptions({isModalOpen: true, type: 'add'})}>
+              <ButtonAdd onClick={() => dispatch(openModalAdd())}>
                 add movie
               </ButtonAdd>
           }

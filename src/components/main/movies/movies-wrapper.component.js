@@ -12,24 +12,33 @@ const MoviesGrid = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
+  ::after {
+    content: ''; 
+    flex: auto;
+  }
+  
 `
 
 const MoviesWrapper = (props) => {
-  const { movies, handleClick } = props;
+  const { movies } = props;
+
   return (
     <>
-      <MoviesCount>{ movies.length } movies found</MoviesCount>
+      <MoviesCount>{ movies.count } movies found</MoviesCount>
       <MoviesGrid>
-        {movies.map((movie, idx) => (
-          <Movie key={`movie-${idx}`} movie={movie} handleClick={handleClick}></Movie>
-        ))}
+        {
+          movies.list?.map(movie => (
+            <Movie key={movie.id} movie={movie}></Movie>
+          ))
+        }
       </MoviesGrid>
     </>
   )
 }
 
 MoviesWrapper.propTypes = {
-  movies: PropTypes.arrayOf(PropTypes.object)
+  list: PropTypes.arrayOf(PropTypes.object),
+  count: PropTypes.number
 }
 
 export default MoviesWrapper;

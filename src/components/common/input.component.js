@@ -1,5 +1,6 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import styled from "styled-components"
+import genres from './genres';
 
 const InputContainer = styled.div`
   position: relative;
@@ -25,16 +26,19 @@ const InputContainer = styled.div`
       opacity: 1;
     }
   }
+  .input-field {
+    width: 100%;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    padding: 15px;
+    position: relative;
+    color: ${props => props.theme.white};
+  }
 `
-const InputName = styled.input`
-  width: 100%;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-  padding: 15px;
-  position: relative;
+const Input = styled.input`
   height: 3rem;
-  color: ${props => props.theme.white};
+
   &:not(.has-placeholder):not(:placeholder-shown) + label {
     opacity: 0;
   }
@@ -46,6 +50,16 @@ const InputName = styled.input`
     background: url(./assets/calendar-icon.png) 99% 50% no-repeat;
     background-color: rgba(255, 255, 255, 0.2);
   }
+
+  &:disabled {
+    background-color: transparent;
+    padding: 0;
+    cursor: not-allowed;
+  }
+`
+const TextArea = styled.textarea`
+  resize: vertical;
+  height: auto;
 `
 const Label = styled.label`
   position: absolute;
@@ -63,26 +77,38 @@ const Label = styled.label`
     font-weight: 500;
   }
 `
-
 const Select = styled.select`
-  width: 100%;
-  background-color: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 3px;
-  padding: 15px;
-  position: relative;
-  height: 3rem;
-  color: ${props => props.theme.white};
+  height: auto;
   appearance: none;
 `
 
+const InputField = props => {
 
-const Input = props => {
+  const {
+    value,
+    type,
+    label,
+    placeholder,
+    name,
+    className,
+    disabled,
+    width,
+    onChange
+  } = props;
 
-  const { value, type, label, placeholder, name, className, width } = props;
-  
-  const [ newValue, setNewValue ] = useState(value ? value : '');
-  
+  const initialValue = value !== 'undefined' ? value : '';
+  const [ newValue, setNewValue ] = useState(initialValue);
+
+  if (type === 'select' && !Array.isArray(newValue)) setNewValue([]);
+
+  useEffect(() => {
+    (onChange && newValue.length > 0) && onChange(newValue);
+  }, [newValue, onChange]);
+
+  const handleChange = e => {
+    setNewValue(e.target.value);
+  }
+
   return(
     <>
       <InputContainer className={
@@ -93,24 +119,41 @@ const Input = props => {
       }
       >
         {
-          type === 'select' ?
-            <Select 
+          {
+            'select': 
+              <Select 
+                placeholder={placeholder ? placeholder : ' '} 
+                className={['input-field', placeholder && 'has-placeholder']} 
+                type={type} 
+                multiple="multiple"
+                name={name}
+                value={newValue}
+                onChange={handleChange}
+              >
+                {
+                  genres.map( (g, idx) =>
+                    <option key={`genre-${idx}`}>{g}</option>
+                  )
+                }
+              </Select>,
+            'textarea':
+              <TextArea
+                placeholder={placeholder ? placeholder : ' '} 
+                className={['input-field', placeholder && 'has-placeholder']} 
+                name={name}
+                value={newValue}
+                onChange={handleChange} 
+              />
+          }[type] ||
+            <Input 
               placeholder={placeholder ? placeholder : ' '} 
-              className={placeholder && 'has-placeholder' } 
-              type={type} 
-              name={name}>
-              <option>Action</option>
-              <option>Comedy</option>
-              <option>Suspense</option>
-            </Select> 
-            :
-            <InputName 
-              placeholder={placeholder ? placeholder : ' '} 
-              className={placeholder && 'has-placeholder' } 
+              className={['input-field', placeholder && 'has-placeholder']} 
               type={type} 
               name={name}
+              disabled={disabled}
               value={newValue}
-              onChange={setNewValue} />
+              onChange={handleChange} 
+            />
         }
         <Label htmlFor={name} className={className}>{label}</Label>
       </InputContainer>
@@ -118,4 +161,4 @@ const Input = props => {
   )
 }
 
-export default Input;
+export default InputField;

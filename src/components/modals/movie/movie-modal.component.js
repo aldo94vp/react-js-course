@@ -1,5 +1,6 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+
 import Input from '../../common/input.component';
 import ButtonPrimary from '../../common/button-primary.component';
 import ButtonSecondary from '../../common/button-secondary.component';
@@ -14,18 +15,9 @@ const ButtonContainer = styled.div`
   }
 `
 
-
 const MovieModal = props => {
   const { type, movie } = props;
-  
-  const parseDate = useCallback(() => {
-    const now = new Date(new Date().setFullYear(movie.year));
-    const day = ("0" + now.getDate()).slice(-2);
-    const month = ("0" + (now.getMonth() + 1)).slice(-2);
-  
-    return now.getFullYear()+"-"+(month)+"-"+(day) ;
-  }, [movie.year]);
-  
+  const isMovieDefined = Object.keys(movie).length > 0;
   return (
     <>
       {
@@ -37,13 +29,25 @@ const MovieModal = props => {
               { type === 'add' ? 'Add' : 'Edit' }  Movie
             </h1>
             <form>
+              {
+                isMovieDefined &&
+                <Input 
+                  type="text"
+                  name="id"
+                  label="MOVIE ID"
+                  placeholder="Movie ID"
+                  className="red-label"
+                  disabled={true}
+                  value={movie.id}
+                />
+              }
               <Input 
                 type="text"
                 name="title"
                 label="Title"
                 placeholder="Title"
                 className="red-label"
-                value={movie && movie.title}
+                value={movie?.title}
               />
               <Input 
                 type="text"
@@ -51,6 +55,7 @@ const MovieModal = props => {
                 label="Movie URL"
                 placeholder="Movie URL here"
                 className="red-label"
+                value={movie?.poster_path}
               />
               <Input 
                 type="date"
@@ -58,14 +63,15 @@ const MovieModal = props => {
                 label="Release Date"
                 placeholder="Select Date"
                 className="red-label"
-                value={movie && parseDate(movie.year)}
+                value={movie?.release_date}
               />
               <Input 
-                type="text"
+                type="textarea"
                 name="overview"
                 label="Overview"
                 placeholder="Overview here"
                 className="red-label"
+                value={movie?.overview}
               />
               <Input 
                 type="select" 
@@ -73,6 +79,7 @@ const MovieModal = props => {
                 label="Genre"
                 placeholder="Select Genre"
                 className="red-label"
+                value={movie?.genres}
               />
               <Input 
                 type="text"
@@ -80,6 +87,7 @@ const MovieModal = props => {
                 label="Runtime"
                 placeholder="Runtime here"
                 className="red-label"
+                value={movie?.runtime}
               />
               <ButtonContainer>
                 <ButtonSecondary>reset</ButtonSecondary>

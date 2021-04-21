@@ -47,4 +47,3 @@ Provider.defaultProps = {
   movieSelected: {},
   modalOptions: {}
 }
-

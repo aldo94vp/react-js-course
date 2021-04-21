@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { MoviesContext } from '../../contexts';
+import { closeModal } from '../../actions';
 
 import MovieModal from './movie/movie-modal.component';
 
 const BlurContainer = styled.div`
-  position: absolute;
+  position: fixed;
   height: 100vh;
   width: 100%;
   overflow-y: auto;
@@ -56,20 +57,17 @@ const CloseButton = styled.span`
 `
 
 const Modal = () => {
-  const moviesContext = useContext(MoviesContext);
+  const modalOptions = useSelector(state => state.options.modal);
+  const movieSelected = useSelector(state => state.movie);
 
-  const {
-    modalOptions,
-    setModalOptions,
-    movieSelected
-  } = moviesContext;
-  
+  const dispatch = useDispatch();
+
   return (
     <>
       {
-        modalOptions.isModalOpen &&
+        modalOptions.isOpen &&
         <BlurContainer>
-          <CloseButton onClick={() => setModalOptions({isModalOpen: false})}></CloseButton>
+          <CloseButton onClick={() => dispatch(closeModal())}></CloseButton>
           <Container>
             <MovieModal type={modalOptions.type} movie={movieSelected}></MovieModal>
           </Container>

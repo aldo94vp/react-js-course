@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
+import { useParseYear } from '../../../hooks';
 
 const Image = styled.img`
   height: 300px;
@@ -45,24 +46,26 @@ const Details = styled.p`
 const MovieCard = props => {
   const {
     title,
-    year,
-    imgSrc,
-    score,
+    release_date,
+    tagline,
+    poster_path,
+    vote_average,
     runtime,
-    description
+    overview
   } = props.movie;
+  const parsedYear = useParseYear(release_date)() | 0;
 
   return (
     <>
-      <Image src={imgSrc}></Image>
+      <Image src={poster_path}></Image>
       <Description>
-        <Title>{title} <Score score={score}></Score></Title>
-        <p>Oscar Winning Movie</p>
+        <Title>{title} <Score score={vote_average}></Score></Title>
+        <p>{tagline}</p>
         <Details>
-          <span>{year}</span>
+          <span>{parsedYear}</span>
           <span>{runtime} min</span>
         </Details>
-        <p>{description}</p>
+        <p>{overview}</p>
       </Description>
     </>
   )

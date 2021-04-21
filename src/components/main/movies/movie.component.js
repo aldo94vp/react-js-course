@@ -1,7 +1,11 @@
-import { useContext } from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { MoviesContext } from '../../../contexts';
+
+import { useParseYear } from '../../../hooks';
+import { openModalDelete, openModalEdit, setMovie } from '../../../actions';
+
 
 const MovieContainer = styled.div`
   width: 30%;
@@ -108,36 +112,29 @@ const Genre = styled.span`
 `
 
 const Movie = props => {
-  const moviesContext = useContext(MoviesContext);
-
-  const { 
-    setModalOptions,
-    setMovieSelected
-  } = moviesContext;
+  const dispatch = useDispatch();
   
-  const { title, year, imgSrc, genres } = props.movie;
-
-  const setMovie = () => {
-    setMovieSelected(props.movie);
-  }
+  const { title, release_date, poster_path, genres } = props.movie;
+  
+  const parsedYear = useParseYear(release_date)();
 
   return (
     <>
       <MovieContainer>
-        <MovieImage imgSrc={imgSrc} onClick={setMovie}>
+        <MovieImage imgSrc={poster_path} onClick={() => dispatch(setMovie(props.movie))}>
           <MovieOptionsButton>
             <span></span>
             <span></span>
             <span></span>
-          </MovieOptionsButton> 
+          </MovieOptionsButton>
           <MovieOptions>
-            <button onClick={() => setModalOptions({isModalOpen:true, type: 'edit'})}>Edit</button>
-            <button onClick={() => setModalOptions({isModalOpen:true, type: 'delete'})}>Delete</button>
+            <button onClick={() => dispatch(openModalEdit())}>Edit</button>
+            <button onClick={() => dispatch(openModalDelete())}>Delete</button>
           </MovieOptions>
         </MovieImage>
         <MovieDetails>
-          <MovieTitle>{ title }</MovieTitle>
-          <MovieYear>{ year }</MovieYear>
+          <MovieTitle>{title}</MovieTitle>
+          <MovieYear>{parsedYear}</MovieYear>
           <MovieGenres>
             {
               genres.map((genre, idx) => (

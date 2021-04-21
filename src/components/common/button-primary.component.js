@@ -11,7 +11,7 @@ const Button = styled.button`
 `
 
 const ButtonPrimary = props => (
-  <Button type={props.type}>{props.children}</Button>
+  <Button type={props.type} onClick={props.onClick}>{props.children}</Button>
 )
 
 export default ButtonPrimary;
