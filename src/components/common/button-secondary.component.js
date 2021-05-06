@@ -8,10 +8,11 @@ const Button = styled.button`
   color: ${props => props.theme.red};
   border: 1px solid ${props => props.theme.red};
   border-radius: 3px;
+  cursor: pointer;
 `
 
 const ButtonSecondary = props => (
-  <Button type="button">{props.children}</Button>
+  <Button {...props}>{props.children}</Button>
 )
 
 export default ButtonSecondary;

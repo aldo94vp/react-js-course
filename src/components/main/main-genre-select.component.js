@@ -45,7 +45,7 @@ const GenreSelect = (props) => {
 
   useEffect(() => {
     dispatch(filterGenre(selectedGenre))
-  }, [selectedGenre]);
+  }, [selectedGenre, dispatch]);
 
   const genres = [ 'all', ...props.genres ];
   return (

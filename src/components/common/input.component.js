@@ -1,7 +1,15 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import styled from "styled-components"
 import genres from './genres';
+import { useField } from 'formik';
 
+const Error = styled.span`
+  color: ${props => props.theme.red};
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+  flex-wrap: wrap;
+`
 const InputContainer = styled.div`
   position: relative;
   width: 100%;
@@ -85,78 +93,65 @@ const Select = styled.select`
 const InputField = props => {
 
   const {
-    value,
     type,
     label,
     placeholder,
-    name,
     className,
     disabled,
-    width,
+    value,
     onChange
   } = props;
 
-  const initialValue = value !== 'undefined' ? value : '';
-  const [ newValue, setNewValue ] = useState(initialValue);
-
-  if (type === 'select' && !Array.isArray(newValue)) setNewValue([]);
+  const [ field, meta, helpers ] = useField(props);
+  
+  const { setValue } = helpers;
 
   useEffect(() => {
-    (onChange && newValue.length > 0) && onChange(newValue);
-  }, [newValue, onChange]);
+    setValue(value)
+  }, []);
 
-  const handleChange = e => {
-    setNewValue(e.target.value);
-  }
-
-  return(
+  return (
     <>
       <InputContainer className={
         [placeholder && 'has-placeholder',
         type === 'select' && 'is-select']
-      } style={
-        {width}
       }
       >
         {
           {
-            'select': 
-              <Select 
-                placeholder={placeholder ? placeholder : ' '} 
-                className={['input-field', placeholder && 'has-placeholder']} 
-                type={type} 
+            'select':
+              <Select
+                placeholder={placeholder && placeholder}
+                className={['input-field', placeholder && 'has-placeholder']}
+                type={type}
                 multiple="multiple"
-                name={name}
-                value={newValue}
-                onChange={handleChange}
+                {...{ ...field, onChange: onChange }}
               >
                 {
-                  genres.map( (g, idx) =>
+                  genres.map((g, idx) =>
                     <option key={`genre-${idx}`}>{g}</option>
                   )
                 }
               </Select>,
             'textarea':
               <TextArea
-                placeholder={placeholder ? placeholder : ' '} 
-                className={['input-field', placeholder && 'has-placeholder']} 
-                name={name}
-                value={newValue}
-                onChange={handleChange} 
+                placeholder={placeholder && placeholder}
+                className={['input-field', placeholder && 'has-placeholder']}
+                {...field}
               />
           }[type] ||
-            <Input 
-              placeholder={placeholder ? placeholder : ' '} 
-              className={['input-field', placeholder && 'has-placeholder']} 
-              type={type} 
-              name={name}
-              disabled={disabled}
-              value={newValue}
-              onChange={handleChange} 
-            />
+          <Input
+            placeholder={placeholder ? placeholder : ' '}
+            className={['input-field', placeholder && 'has-placeholder']}
+            type={type}
+            disabled={disabled}
+            {...field}
+            
+          />
         }
-        <Label htmlFor={name} className={className}>{label}</Label>
+        <Label htmlFor={field.name} className={className}>{label}</Label>
       </InputContainer>
+      <Error>{meta.error && meta.touched && meta.error}</Error>
     </>
   )
 }

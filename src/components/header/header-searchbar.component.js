@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Formik, Form } from 'formik';
 import styled from 'styled-components';
 
 import { setMoviesList } from '../../actions';
 import ButtonPrimary from '../common/button-primary.component';
 import Input from '../common/input.component';
 
-const Form = styled.form`
+const Container = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -37,20 +38,25 @@ const SearchBar = () => {
   
   return (
     <>
-      <Form  name="search-movie" onSubmit={handleClick}>
+      <Container>
         <h1 className="uppercase">
           find your movie
         </h1>
-        <Input
-          type="text"
-          name="movie-name" 
-          label="What do you want to watch?"
-          width="88%"
-          value={value}
-          onChange={handleValue}
-        />
+        <Formik 
+          initialValues={{movieName: ''}}
+          onSubmit={handleClick}>
+          <Form style={{width: "88%"}}>
+            <Input
+            type="text"
+            name="movieName" 
+            label="What do you want to watch?"
+            value={value}
+            onChange={handleValue}
+            />
+          </Form>    
+        </Formik>
         <ButtonPrimary onClick={handleClick}>search</ButtonPrimary>
-      </Form>
+      </Container>
     </>
   )
 }

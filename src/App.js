@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ThemeProvider } from 'styled-components';
-
-import { MoviesContextProvider } from './contexts';
 
 import { ErrorBoundary } from './components/error-boundary.component';
 import Footer from './components/footer/footer.component';
@@ -18,18 +16,14 @@ import reducers from './reducers';
 const store = createStore(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 const App = () => {
-  const [ modalOptions ] = useState({isModalOpen: false});
-
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <ErrorBoundary>
-          <MoviesContextProvider modalOptions={modalOptions}>
-            <HeaderWrapper></HeaderWrapper>
-            <MainWrapper></MainWrapper>
-            <Footer></Footer>
-            <Modal></Modal>
-          </MoviesContextProvider>
+          <HeaderWrapper></HeaderWrapper>
+          <MainWrapper></MainWrapper>
+          <Footer></Footer>
+          <Modal></Modal>
         </ErrorBoundary>
       </ThemeProvider>
     </Provider>

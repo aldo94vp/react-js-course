@@ -24,6 +24,10 @@ export const openModalDelete = () => ({
   type: 'OPEN_MODAL_DELETE'
 })
 
+export const openModalSubmitted = () => ({
+  type: 'OPEN_MODAL_SUBMITTED'
+})
+
 export const closeModal = () => ({
   type: 'CLOSE_MODAL'
 });

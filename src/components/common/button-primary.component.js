@@ -8,10 +8,11 @@ const Button = styled.button`
   color: ${props => props.theme.white};
   border: none;
   border-radius: 3px;
+  cursor: pointer;
 `
 
 const ButtonPrimary = props => (
-  <Button type={props.type} onClick={props.onClick}>{props.children}</Button>
+  <Button {...props}>{props.children}</Button>
 )
 
 export default ButtonPrimary;

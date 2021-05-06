@@ -35,6 +35,14 @@ const appOptions = (state = defaultOptions, action) => {
         }
       }
       return state;
+    case 'OPEN_MODAL_SUBMITTED':
+      state = { ...state,
+        modal: {
+          isOpen: true,
+          type: 'submitted'
+        }
+      }
+      return state;
     case 'CLOSE_MODAL':
       state = { ...state,
         modal: {

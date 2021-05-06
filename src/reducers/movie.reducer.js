@@ -5,7 +5,7 @@ const MovieReducer = (state = {}, action) => {
       return state;
     case 'CLEAR_MOVIE':
       state = {}
-      return state;
+      return state;  
     default:
       return state;
   }
